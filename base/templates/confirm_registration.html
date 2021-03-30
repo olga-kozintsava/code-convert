@@ -1,0 +1,17 @@
+{% extends 'base_signup.html' %}
+{% block title %}StartConvert{% endblock %}
+{% block content %}
+    {% load static %}
+    <div class="confirm-email">
+        <div class="confirm-div">
+            <div class="confirm-label">
+                {% if request.user.is_active %}
+                    <span class="confirm-span"> Thank you for confirming email address</span>
+                    <span class="confirm-span"><a class="continue-button" href="{% url 'start' %}">Continue</a></span>
+                {% else %}
+                    <span class="confirm-span">Please confirm your email address to complete the registration</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

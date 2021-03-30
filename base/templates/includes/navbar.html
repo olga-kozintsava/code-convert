@@ -1,0 +1,10 @@
+<nav class="navbar">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="{% url 'start' %}">Start<b>Convert</b></a>
+    </div>
+    <div class="navar-balance"><a href=#>Balance: {{ request.user.balance }}</a></div>
+    <div class="navbar-list">
+        <a href="{% url 'history' %}">{{ request.user }} History</a>
+        <a href="{% url 'auth:logout' %}">Logout</a>
+    </div>
+</nav>

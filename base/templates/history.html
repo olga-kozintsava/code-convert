@@ -1,0 +1,115 @@
+{% extends 'base_start.html' %}
+{% block title %}History{% endblock %}
+{% block content %}
+{% load static %}
+    {% include 'includes/navbar.html' %}
+
+
+    {% if user_convert %}
+
+            <div class="history">
+                    <table class="history_table">
+                        <thead>
+                        <tr>
+
+                            <th>Date</th>
+                             <th>Deduction of points</th>
+                            <th>Input</th>
+                            <th>Output</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for convert in user_convert %}
+                            <tr>
+
+                                <td>{{ convert.in_tmstmp|date:"d/m/Y H:i"}}</td>
+                                {% if convert.amount %}
+                                <td>-{{ convert.amount }}</td>
+                                    {% else %}
+                                    <td>0</td>
+                                 {% endif %}
+                                <td>{% include 'includes/download_input.html' with convert_id=convert.id %}</td>
+                                <td> {% include 'includes/download_output.html' with convert_id=convert.id %}</td>
+                                <td>{% include 'includes/delete_convert.html' with convert_id=convert.id %}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+
+        {% if is_paginated %}
+
+             <div>
+                <ul class="pagination ">
+
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a href="?page=1"><i class="fa fa-long-arrow-left"></i> First</a></li>
+                        <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}"><i class="fa fa-long-arrow-left"></i> Previous</a></li>
+                    {% endif %}
+                    <li class="page-item active"><a href="#" class="page-link">{{ page_obj.number }}</a></li>
+                    {% if page_obj.has_next %}
+                         <li class="page-item"><a href="?page={{ page_obj.next_page_number }}">Next <i class="fa fa-long-arrow-right"></i></a></li>
+                         <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}">Last <i class="fa fa-long-arrow-right"></i></a></li>
+                {% endif %}
+                </ul>
+            </div>
+
+        {% endif %}
+
+
+    {% else %}
+        <h1> Your history is empty</h1>
+    {% endif %}
+
+
+
+{##}
+{#.countLines {#}
+{#    counter-reset: trCount;#}
+{#    overflow: auto;#}
+{#    white-space: nowrap;#}
+{#}#}
+{#.countLines tr td:first-child:before {#}
+{#    position:relative;#}
+{#    counter-increment: trCount;#}
+{#    content:counter(trCount);#}
+{#    color:#1d1f21;#}
+{#    background:#c5c8c6;#}
+{#}#}
+{#.width3 {width:3%}#}
+{##}
+{#.pagination > li > a#}
+{#{#}
+{#    background-color: white;#}
+{#    color: #5a5a5a;#}
+{#}#}
+{##}
+{##}
+{#.pagination > li > a:hover#}
+{##}
+{#{#}
+{#    color: black;#}
+{#    background-color: #eee;#}
+{#    border-color: #ddd;#}
+{#}#}
+{##}
+{#.pagination > .active > a#}
+{#{#}
+{#    color: white;#}
+{#    background-color: #093978 !Important;#}
+{#    border: solid 1px #093978 !Important;#}
+{#}#}
+{##}
+{#.pagination > .active > a:hover#}
+{#{#}
+{#    background-color: #093978 !Important;#}
+{#    border: solid 1px #093978;#}
+{#}#}
+{##}
+
+
+
+
+{% endblock %}

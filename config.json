@@ -1,0 +1,10 @@
+{
+  "DBType": "django.db.backends.postgresql_psycopg2",
+  "DSNName": "code_convert",
+  "User": "*****",
+  "Password": "*****",
+  "Host": "localhost",
+  "Port": "5432",
+  "Input_path": "/home/oy/projects/code_convert",
+  "Start_balance" : "1000"
+}

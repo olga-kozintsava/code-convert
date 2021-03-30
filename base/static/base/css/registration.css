@@ -1,0 +1,68 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background: #fffacd;
+    font-family: 'Roboto Slab', serif;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box
+}
+
+.confirm-email {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.confirm-div {
+    height: 60%;
+    width: 60%;
+    background-color: white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirm-label {
+    height: 80%;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 2px solid black;
+    flex-direction: column;
+}
+
+.confirm-span {
+    margin: 20px;
+    font-size: x-large;
+}
+
+.continue-button {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    background-color: black;
+    border: 2px solid black;
+    padding: 10px 40px;
+
+}
+
+.continue-button:hover {
+    border: 2px solid #000000;
+    background: #fffacd;
+    color: #000000;
+    box-shadow: 5px 5px 0 #040404;
+}
+
+.continue-button:active {
+    box-shadow: none;
+    top: 5px;
+    left: 5px;
+}

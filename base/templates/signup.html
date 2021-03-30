@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'base/css/jquery-ui.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="login-reg-panel">
+    <div class="login-info-box">
+        <h2>Have an account?</h2>
+        <label id="label-register" for="log-reg-show">Login</label>
+        <input type="radio" name="active-log-panel" id="log-reg-show" checked="checked">
+    </div>
+    <div class="register-info-box">
+        <h2>Don't have an account?</h2>
+        <label id="label-login" for="log-login-show">Register</label>
+        <input type="radio" name="active-log-panel" id="log-login-show">
+    </div>
+    <div class="white-panel">
+        <div class="login-show">
+            <h2>LOGIN</h2>
+            <form action="{% url 'signup' %}" method="post" id="send_login" role="form">
+                {% csrf_token %}
+                <input type='hidden' name='action' value='login'>
+                <b id="login_error" class="login_error"></b>
+                {% for field in login_form %}
+                    {{ field }}
+                {% endfor %}
+                <button type="submit" title="send login">Login</button>
+            </form>
+        </div>
+        <div class="register-show">
+            <h2>REGISTER</h2>
+            <form action="{% url 'signup' %}" method="post" id="send_signup" role="form">
+                {% csrf_token %}
+                <input type='hidden' name='action' value='signup'>
+                {{ signup_form.username }}
+                <b id="signup_username_error" class="signup_error"></b>
+                {{ signup_form.email }}
+                <b id="signup_email_error" class="signup_error"></b>
+                {{ signup_form.password1 }}
+                <b id="signup_password2_error" class="signup_error"></b>
+                {{ signup_form.password2 }}
+                <button type="submit" title="send signup">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('.login-info-box').fadeOut();
+        $('.login-show').addClass('show-log-panel');
+    });
+
+
+    $('.login-reg-panel input[type="radio"]').on('change', function () {
+        if ($('#log-login-show').is(':checked')) {
+            $('.register-info-box').fadeOut();
+            $('.login-info-box').fadeIn();
+
+            $('.white-panel').addClass('right-log');
+            $('.register-show').addClass('show-log-panel');
+            $('.login-show').removeClass('show-log-panel');
+
+        } else if ($('#log-reg-show').is(':checked')) {
+            $('.register-info-box').fadeIn();
+            $('.login-info-box').fadeOut();
+
+            $('.white-panel').removeClass('right-log');
+
+            $('.login-show').addClass('show-log-panel');
+            $('.register-show').removeClass('show-log-panel');
+        }
+    });
+
+
+    $('#send_login').submit(function (event) {
+        event.preventDefault();
+        var data = new FormData($(this)[0]);
+
+        $.ajax({
+            headers: {"X-CSRFToken": '{{csrf_token}}'},
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: data,
+            context: this,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                window.location.href = '/'
+            },
+            error: function (response) {
+                var $error = response.responseJSON.error;
+                $('.login_error').empty();
+                $(this).find('#login_error').append($error)
+            }
+        });
+    })
+
+    $('#send_signup').submit(function (event) {
+        event.preventDefault();
+
+        var data = new FormData($(this)[0]);
+
+        $.ajax({
+            headers: {"X-CSRFToken": '{{csrf_token}}'},
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: data,
+            context: this,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                window.location.href = 'confirm_registration'
+
+
+            },
+            error: function (response) {
+                var error = JSON.parse(response.responseJSON.errors);
+                $('.signup_error').empty()
+                for (var x in error) {
+                    $(this).find('#signup_' + x + '_error').append(error[x]);
+                }
+            }
+        });
+    })
+
+</script>
+
+
+<style>
+    body {
+        font-family: 'Roboto Slab', serif;
+        height: 100vh;
+        min-height: 550px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow-y: hidden;
+    }
+
+    a {
+        text-decoration: none;
+        color: #444444;
+    }
+
+    .login-reg-panel {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+        width: 70%;
+        right: 0;
+        left: 0;
+        margin: auto;
+        height: 400px;
+        background-color: #093978;
+    }
+
+    .white-panel {
+        background-color: rgba(255, 255, 255, 1);
+        min-height: 500px;
+        position: absolute;
+        top: -50px;
+        width: 50%;
+        right: calc(50% - 50px);
+        transition: .3s ease-in-out;
+        z-index: 0;
+        box-shadow: 0 0 15px 9px #00000096;
+    }
+
+    .login-reg-panel input[type="radio"] {
+        position: relative;
+        display: none;
+    }
+
+    .login-reg-panel {
+        color: #B8B8B8;
+    }
+
+    .login-reg-panel #label-login,
+    .login-reg-panel #label-register {
+        border: 1px solid #9E9E9E;
+        padding: 5px 5px;
+        width: 150px;
+        display: block;
+        text-align: center;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .login-info-box {
+        width: 30%;
+        padding: 0 50px;
+        top: 20%;
+        left: 0;
+        position: absolute;
+        text-align: left;
+    }
+
+    .register-info-box {
+        width: 30%;
+        padding: 0 50px;
+        top: 20%;
+        right: 0;
+        position: absolute;
+        text-align: left;
+
+    }
+
+    .right-log {
+        right: 50px !important;
+    }
+
+    .login-show,
+    .register-show {
+        z-index: 1;
+        display: none;
+        opacity: 0;
+        transition: 0.3s ease-in-out;
+        color: #242424;
+        text-align: left;
+        padding: 40px;
+    }
+
+    .show-log-panel {
+        display: block;
+        opacity: 0.9;
+    }
+
+    .login-show input[type="text"], .login-show input[type="password"] {
+        width: 100%;
+        display: block;
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #b5b5b5;
+        outline: none;
+    }
+
+    .login-show button {
+        max-width: 150px;
+        width: 100%;
+        background: #444444;
+        color: #f9f9f9;
+        border: none;
+        padding: 10px;
+        text-transform: uppercase;
+        border-radius: 2px;
+        float: right;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    .login-show a {
+        display: inline-block;
+        padding: 10px 0;
+    }
+
+    .register-show input {
+        width: 100%;
+        display: block;
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #b5b5b5;
+        outline: none;
+    }
+
+    .register-show button {
+        max-width: 150px;
+        width: 100%;
+        background: #444444;
+        color: #f9f9f9;
+        border: none;
+        padding: 10px;
+        text-transform: uppercase;
+        border-radius: 2px;
+        float: right;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+
+    a {
+        text-decoration: none;
+        color: #2c7715;
+    }
+
+    b {
+        color: red;
+    }
+</style>
+</body>
+</html>
